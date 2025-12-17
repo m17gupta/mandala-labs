@@ -5,6 +5,7 @@ import { ArrowRight, Check, Sparkles, Shield, Zap, Boxes, Cpu } from "lucide-rea
 import Hero from "@/components/sections/Hero";
 import AIWorkshopSection from "@/components/sections/AIWorkshopSection";
 
+
 function BackgroundFX() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">

@@ -35,8 +35,8 @@ const COLORS = {
 };
 
 /* ===========================
-   ✅ GLOBAL CONTAINER FIX
-   same hero width across all
+   ✅ SectionFrame (Desktop same)
+   Only mobile padding/overflow fix
    =========================== */
 function SectionFrame({
   children,
@@ -49,10 +49,13 @@ function SectionFrame({
 }) {
   return (
     <section className={["relative", className].join(" ")}>
-      <div className="ms-auto container-xl ">
+      {/* ✅ Desktop same: container-xl ms-auto
+          ✅ Mobile fix: add px-4 sm:px-6 so content doesn't stick to edges */}
+      <div className="ms-auto container-xl px-4 sm:px-6 lg:px-0">
         <div
           className={[
             "grid grid-cols-12",
+            "overflow-hidden", // ✅ prevents border overflow on mobile
             showTopBorder ? "border-t" : "",
           ].join(" ")}
           style={{
@@ -61,11 +64,6 @@ function SectionFrame({
             borderRight: `1px solid ${COLORS.gridLine}`,
           }}
         >
-          {/* ✅ Left gutter ONLY desktop so no mobile gap */}
-          {/* <div
-            className="hidden lg:block lg:col-span-2"
-            style={{ borderRight: `1px solid ${COLORS.gridLine}` }}
-          /> */}
           <div className="col-span-12 lg:col-span-12">{children}</div>
         </div>
       </div>
@@ -76,10 +74,7 @@ function SectionFrame({
 /* ---------------------------- background video fx ------------------------- */
 function GlassVideoBackground() {
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-    >
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <div className="absolute inset-0" style={{ background: COLORS.bg }} />
 
       <div className="absolute inset-0 opacity-[0.95]">
@@ -113,8 +108,7 @@ function GlassVideoBackground() {
       <div
         className="absolute inset-0 opacity-[0.12]"
         style={{
-          backgroundImage:
-            "radial-gradient(rgba(255,255,255,0.26) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.26) 1px, transparent 1px)",
           backgroundSize: "22px 22px",
           backgroundPosition: "2px 2px",
         }}
@@ -147,47 +141,34 @@ function FloatingChat() {
   );
 }
 
-/* HERO */
+/* HERO (Desktop same) */
 function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <GlassVideoBackground />
       <div className="relative z-10">
         <SectionFrame showTopBorder={false}>
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.25 }}
-          >
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.25 }}>
+            {/* ✅ Desktop same: px-6 lg:px-12
+                ✅ Mobile improvement: add sm:px-6 already covered by px-6 (so keep) */}
             <div className="px-6 lg:px-12 pt-10 lg:pt-16 pb-10">
               <motion.h1
                 variants={fadeUp}
-                className="text-[44px] sm:text-[62px] lg:text-[84px] font-semibold leading-[1.02] tracking-tight text-white"
+                className="text-[30px] sm:text-[42px] text-[36px] sm:text-[62px] lg:text-[84px] font-semibold leading-[1.2] tracking-tight text-white"
               >
-                Artificial intelligence software development: Where innovation
-                drives real-world results
+                Artificial intelligence software development: Where innovation drives real-world results
               </motion.h1>
 
-              <motion.p
-                variants={fadeUp}
-                className="mt-10 max-w-[760px] text-lg leading-relaxed text-white/75"
-              >
-                Our formula for AI software development? (High-quality data +
-                robust algorithms + efficient infrastructure) × (top talent +
-                flawless execution + ongoing monitoring) = success, every time.
+              <motion.p variants={fadeUp} className="mt-10 max-w-[760px] text-base sm:text-lg leading-relaxed text-white/75">
+                Our formula for AI software development? (High-quality data + robust algorithms + efficient infrastructure) × (top talent + flawless execution +
+                ongoing monitoring) = success, every time.
               </motion.p>
             </div>
 
-            <motion.div
-              variants={fade}
-              className="border-t"
-              style={{ borderColor: COLORS.gridLine }}
-            >
-              {/* magenta bar */}
+            <motion.div variants={fade} className="border-t" style={{ borderColor: COLORS.gridLine }}>
               <div className="px-6 lg:px-12 py-10">
                 <div
-                  className="h-[56px] w-[460px] max-w-[90vw] flex items-center justify-between px-8 text-black font-semibold"
+                  className="h-[56px] w-full sm:w-[460px] max-w-[90vw] flex items-center justify-between px-8 text-black font-semibold"
                   style={{ background: COLORS.pink }}
                 >
                   Get a quote
@@ -202,7 +183,7 @@ function HeroSection() {
   );
 }
 
-/* SERVICES GRID */
+/* SERVICES GRID (Desktop same) */
 function ServicesGrid() {
   const cards = [
     {
@@ -225,10 +206,7 @@ function ServicesGrid() {
 
   return (
     <SectionFrame>
-      <div
-        className="grid grid-cols-1 lg:grid-cols-2 border-b"
-        style={{ borderColor: COLORS.gridLine }}
-      >
+      <div className="grid grid-cols-1 lg:grid-cols-2 border-b" style={{ borderColor: COLORS.gridLine }}>
         {cards.map((c, i) => (
           <a
             key={c.title}
@@ -239,10 +217,8 @@ function ServicesGrid() {
               borderBottom: i < 2 ? `1px solid ${COLORS.gridLine}` : "none",
             }}
           >
-            <div className="text-3xl font-semibold text-white">{c.title}</div>
-            <p className="mt-6 max-w-[520px] text-base leading-relaxed text-white/70">
-              {c.desc}
-            </p>
+            <div className="text-2xl sm:text-3xl font-semibold text-white">{c.title}</div>
+            <p className="mt-6 max-w-[520px] text-sm sm:text-base leading-relaxed text-white/70">{c.desc}</p>
 
             <div className="mt-10 inline-flex items-center gap-2 text-white/80">
               Learn more
@@ -253,36 +229,27 @@ function ServicesGrid() {
         ))}
       </div>
 
-      {/* Workshop split */}
+      {/* Workshop split (Desktop same) */}
       <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div
-          className="h-[280px] lg:h-[320px]"
-          style={{ borderRight: `1px solid ${COLORS.gridLine}` }}
-        >
+        <div className="h-[280px] lg:h-[320px] hidden lg:block md:block" style={{ borderRight: `1px solid ${COLORS.gridLine}` }}>
           <div className="h-full w-full bg-black/25" />
         </div>
         <div className="px-6 lg:px-12 py-14 lg:py-16">
-          <div className="text-[44px] lg:text-[54px] leading-[1.03] font-semibold text-white">
+          <div className="text-[34px] sm:text-[44px] lg:text-[54px] leading-[1.03] font-semibold text-white">
             Not sure where to start? Start with an AI workshop.
           </div>
         </div>
       </div>
 
-      {/* CTA */}
-      <div
-        className="grid grid-cols-1 lg:grid-cols-2 border-t"
-        style={{ borderColor: COLORS.gridLine }}
-      >
-        <div
-          className="h-[200px]"
-          style={{ borderRight: `1px solid ${COLORS.gridLine}` }}
-        >
+      {/* CTA (Desktop same) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 border-t" style={{ borderColor: COLORS.gridLine }}>
+        <div className="h-[200px] hidden lg:block" style={{ borderRight: `1px solid ${COLORS.gridLine}` }}>
           <div className="h-full w-full bg-black/25" />
         </div>
         <div className="h-[200px] flex items-start justify-end p-6 lg:p-10">
           <a
             href="#"
-            className="group w-full max-w-[520px] flex items-center justify-between px-10 lg:px-12 py-10 text-2xl font-semibold text-black"
+            className="group w-full max-w-[520px] flex items-center justify-between px-10 lg:px-12 py-10 text-xl sm:text-2xl font-semibold text-black"
             style={{ background: COLORS.pink }}
           >
             Explore workshop details
@@ -294,7 +261,7 @@ function ServicesGrid() {
   );
 }
 
-/* SOLUTIONS LIST */
+/* SOLUTIONS LIST (Desktop same) */
 function SolutionsList() {
   const rows = useMemo(
     () => [
@@ -317,26 +284,13 @@ function SolutionsList() {
         no: "02",
         title: "Computer vision",
         lead: "Analyze images and video to automate decisions and workflows.",
-        bullets: [
-          "Object detection",
-          "Segmentation",
-          "Quality control",
-          "Document understanding",
-          "Visual search",
-          "Defect detection",
-        ],
+        bullets: ["Object detection", "Segmentation", "Quality control", "Document understanding", "Visual search", "Defect detection"],
       },
       {
         no: "03",
         title: "Predictive analytics",
         lead: "Forecast outcomes and optimize operations with data-driven models.",
-        bullets: [
-          "Demand forecasting",
-          "Risk scoring",
-          "Churn prediction",
-          "Anomaly detection",
-          "Capacity planning",
-        ],
+        bullets: ["Demand forecasting", "Risk scoring", "Churn prediction", "Anomaly detection", "Capacity planning"],
       },
     ],
     []
@@ -346,10 +300,8 @@ function SolutionsList() {
 
   return (
     <SectionFrame>
-      {/* statement */}
-      <div className="px-6 lg:px-12 py-10 text-2xl text-white/85">
-        Vention transforms AI into a powerful growth engine, delivering
-        top-of-the-line solutions that redefine efficiency and drive profit.
+      <div className="px-6 lg:px-12 py-10 text-lg sm:text-2xl text-white/85">
+        Mandala Labs transforms AI into a powerful growth engine, delivering top-of-the-line solutions that redefine efficiency and drive profit.
       </div>
 
       {rows.map((r, idx) => (
@@ -362,21 +314,17 @@ function SolutionsList() {
           style={{ borderColor: COLORS.gridDarkLine }}
         >
           <div
-            className="px-6 lg:px-12 py-14 transition"
-            style={{
-              background: idx === active ? "rgba(255,77,242,0.35)" : "transparent",
-            }}
+            className="px-6 lg:px-12 py-12 sm:py-14 transition"
+            style={{ background: idx === active ? "rgba(255,77,242,0.35)" : "transparent" }}
           >
             <div className="grid grid-cols-12 gap-6">
-              <div className="col-span-12 md:col-span-2 text-4xl font-semibold text-white">
-                {r.no}
-              </div>
+              <div className="col-span-12 md:col-span-2 text-3xl sm:text-4xl font-semibold text-white">{r.no}</div>
 
               <div className="col-span-12 md:col-span-10">
-                <div className="text-3xl font-semibold text-white">{r.title}</div>
-                <div className="mt-6 text-2xl text-white/80">{r.lead}</div>
+                <div className="text-2xl sm:text-3xl font-semibold text-white">{r.title}</div>
+                <div className="mt-6 text-lg sm:text-2xl text-white/80">{r.lead}</div>
 
-                <ul className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-lg text-white/75">
+                <ul className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-base sm:text-lg text-white/75">
                   {r.bullets.map((b) => (
                     <li key={b} className="list-disc ml-6">
                       {b}
@@ -392,25 +340,16 @@ function SolutionsList() {
   );
 }
 
-/* BY SECTOR accordion (open under title) */
+/* BY SECTOR accordion (Desktop same, only mobile spacing improved) */
 function BySectorAccordion() {
   const sectors = useMemo(
     () => [
       {
         name: "Fintech",
         items: [
-          {
-            h: "Portfolio management",
-            p: "Evaluate investment risks, identify high-performing assets, and construct portfolios that meet performance targets.",
-          },
-          {
-            h: "Algorithmic trading",
-            p: "Process vast market data in real time and execute trades automatically when specific conditions are met.",
-          },
-          {
-            h: "Customer service",
-            p: "Address frequent queries in seconds and gauge customer sentiment to improve satisfaction and reduce costs.",
-          },
+          { h: "Portfolio management", p: "Evaluate investment risks, identify high-performing assets, and construct portfolios that meet performance targets." },
+          { h: "Algorithmic trading", p: "Process vast market data in real time and execute trades automatically when specific conditions are met." },
+          { h: "Customer service", p: "Address frequent queries in seconds and gauge customer sentiment to improve satisfaction and reduce costs." },
         ],
       },
       {
@@ -435,37 +374,23 @@ function BySectorAccordion() {
 
   return (
     <SectionFrame>
-      {/* ✅ Single column accordion (opens under title) */}
-      <div className="px-6 lg:px-0 py-16">
+      <div className="px-6 lg:px-0 py-12 sm:py-16">
         {sectors.map((s, idx) => {
           const isOpen = open === idx;
 
           return (
-            <div
-              key={s.name}
-              className="border-b"
-              style={{ borderColor: COLORS.gridLine }}
-            >
-              {/* Header */}
+            <div key={s.name} className="border-b" style={{ borderColor: COLORS.gridLine }}>
               <button
                 type="button"
                 onClick={() => setOpen(isOpen ? null : idx)}
-                className="w-full text-left py-8 group hover:bg-white/[0.03] transition ps-10 pe-14"
+                className="w-full text-left py-8 group hover:bg-white/[0.03] transition ps-6 sm:ps-10 pe-6 sm:pe-14"
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl sm:text-4xl font-semibold text-white">
-                    {s.name}
-                  </div>
-
-                  <div className="text-white/80">
-                    {isOpen ? <Minus className="h-7 w-7" /> : <Plus className="h-7 w-7" />}
-                  </div>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white">{s.name}</div>
+                  <div className="text-white/80">{isOpen ? <Minus className="h-7 w-7" /> : <Plus className="h-7 w-7" />}</div>
                 </div>
-
-                {/* <div className="mt-4 h-[1px] bg-white/0 group-hover:bg-white/20 transition" /> */}
               </button>
 
-              {/* Content (opens UNDER title) */}
               <AnimatePresence initial={false}>
                 {isOpen && (
                   <motion.div
@@ -475,15 +400,11 @@ function BySectorAccordion() {
                     transition={{ duration: 0.35, ease }}
                     className="overflow-hidden"
                   >
-                    <div className="pb-10 pt-2 ps-10 pe-14">
+                    <div className="pb-10 pt-2 ps-6 sm:ps-10 pe-6 sm:pe-14">
                       {s.items.map((it) => (
                         <div key={it.h} className="mb-8">
-                          <div className="text-xl sm:text-2xl font-semibold text-white">
-                            {it.h}
-                          </div>
-                          <p className="mt-3 text-base sm:text-lg leading-relaxed text-white/70">
-                            {it.p}
-                          </p>
+                          <div className="text-lg sm:text-xl lg:text-2xl font-semibold text-white">{it.h}</div>
+                          <p className="mt-3 text-sm sm:text-base lg:text-lg leading-relaxed text-white/70">{it.p}</p>
                         </div>
                       ))}
                     </div>
@@ -498,25 +419,24 @@ function BySectorAccordion() {
   );
 }
 
-
 /* WHY */
 function WhySection() {
   return (
     <SectionFrame>
       <a
         href="#"
-        className="flex items-center justify-between px-6 lg:px-12 py-10 text-3xl font-semibold text-black"
+        className="flex items-center justify-between px-6 lg:px-12 py-10 text-xl sm:text-2xl lg:text-3xl font-semibold text-black"
         style={{ background: COLORS.pink }}
       >
         Connect with our experts today
         <ArrowUpRight className="h-8 w-8" />
       </a>
 
-      <div className="px-6 lg:px-12 py-16">
-        <div className="text-center text-6xl font-semibold text-white">Why Mandala Labs?</div>
+      <div className="px-6 lg:px-12 py-12 sm:py-16">
+        <div className="text-center text-4xl sm:text-5xl lg:text-6xl font-semibold text-white">Why Mandala Labs?</div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t" style={{ borderColor: COLORS.gridLine }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t" style={{ borderColor: COLORS.gridLine }}>
         {[
           { big: "20", label: "Years of experience in\ncustom development" },
           { big: "100+", label: "AI professionals" },
@@ -525,13 +445,13 @@ function WhySection() {
         ].map((s, i) => (
           <div
             key={i}
-            className="px-10 py-14 hover:bg-white/[0.03] transition"
+            className="px-6 sm:px-10 py-12 sm:py-14 hover:bg-white/[0.03] transition"
             style={{ borderRight: i !== 3 ? `1px solid ${COLORS.gridLine}` : "none" }}
           >
-            <div className="text-[86px] leading-none font-semibold" style={{ color: COLORS.pinkSoft }}>
+            <div className="text-[64px] sm:text-[86px] leading-none font-semibold" style={{ color: COLORS.pinkSoft }}>
               {s.big}
             </div>
-            <div className="mt-8 whitespace-pre-line text-lg text-white/75">{s.label}</div>
+            <div className="mt-8 whitespace-pre-line text-base sm:text-lg text-white/75">{s.label}</div>
           </div>
         ))}
       </div>
@@ -550,26 +470,25 @@ function CaseStudies() {
           style={{ background: COLORS.coral, borderRight: `1px solid ${COLORS.gridLine}` }}
         >
           <div className="text-sm font-semibold text-black/70">Case study</div>
-          <div className="mt-8 text-3xl font-semibold text-black underline underline-offset-8 decoration-black/40 group-hover:decoration-black transition">
+          <div className="mt-8 text-2xl sm:text-3xl font-semibold text-black underline underline-offset-8 decoration-black/40 group-hover:decoration-black transition">
             EliseAI: Turning leads into leases
           </div>
-          <p className="mt-8 max-w-[540px] text-lg leading-relaxed text-black/75">
-            Vention developed an AI-powered leasing assistant that provides automatic replies about properties and rentals.
+          <p className="mt-8 max-w-[540px] text-base sm:text-lg leading-relaxed text-black/75">
+            Mandala Labs developed an AI-powered leasing assistant that provides automatic replies about properties and rentals.
           </p>
         </a>
 
         <a href="#" className="px-6 lg:px-12 py-14 group hover:bg-white/[0.03] transition">
           <div className="grid grid-cols-12 gap-8 items-start">
             <div className="col-span-12 md:col-span-5">
-              {/* <div className="h-[220px] w-full bg-white/10" /> */}
-              <img src="./assets/Image/team-working-together-project.jpg"></img>
+              <img src="./assets/Image/team-working-together-project.jpg" className="w-full h-auto" alt="" />
             </div>
             <div className="col-span-12 md:col-span-7">
               <div className="text-sm font-semibold text-white/60">Case study</div>
-              <div className="mt-8 text-3xl font-semibold text-white underline underline-offset-8 decoration-white/25 group-hover:decoration-white/60 transition">
+              <div className="mt-8 text-2xl sm:text-3xl font-semibold text-white underline underline-offset-8 decoration-white/25 group-hover:decoration-white/60 transition">
                 AI product development for Comet
               </div>
-              <p className="mt-8 text-lg leading-relaxed text-white/70">
+              <p className="mt-8 text-base sm:text-lg leading-relaxed text-white/70">
                 Monitoring solution that tracks neural network training and refines the process on the go.
               </p>
             </div>
@@ -578,7 +497,7 @@ function CaseStudies() {
       </div>
 
       <div
-        className="border-t px-6 lg:px-12 py-16 text-4xl font-semibold text-black"
+        className="border-t px-6 lg:px-12 py-12 sm:py-16 text-2xl sm:text-4xl font-semibold text-black"
         style={{ borderColor: COLORS.gridLine, background: COLORS.pink }}
       >
         Our clients say it best
@@ -601,12 +520,11 @@ function Testimonials() {
         {items.map((t, idx) => (
           <div
             key={t.who}
-            className="px-6 lg:px-12 py-16 border-b lg:border-b-0 hover:bg-white/[0.03] transition"
+            className="px-6 lg:px-12 py-12 sm:py-16 border-b lg:border-b-0 hover:bg-white/[0.03] transition"
             style={{ borderColor: COLORS.gridLine, borderRight: idx !== 2 ? `1px solid ${COLORS.gridLine}` : "none" }}
           >
-            <div className="text-lg leading-relaxed text-white/80">“{t.quote}”</div>
+            <div className="text-base sm:text-lg leading-relaxed text-white/80">“{t.quote}”</div>
             <div className="mt-10 text-sm font-semibold text-white/60">{t.who}</div>
-            <div className="mt-10 h-[1px] bg-white/0 group-hover:bg-white/20 transition" />
           </div>
         ))}
       </div>
@@ -633,9 +551,9 @@ function SevenPillars() {
 
   return (
     <SectionFrame>
-      <div className="px-6 lg:px-12 py-16">
-        <div className="text-6xl font-semibold text-white">Seven pillars of AI model development process</div>
-        <p className="mt-8 max-w-[760px] text-lg text-white/70">
+      <div className="px-6 lg:px-12 py-12 sm:py-16">
+        <div className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white">Seven pillars of AI model development process</div>
+        <p className="mt-8 max-w-[760px] text-base sm:text-lg text-white/70">
           From setting goals to ongoing monitoring — check out how we ensure smooth delivery of AI components.
         </p>
       </div>
@@ -650,16 +568,15 @@ function SevenPillars() {
           style={{ borderColor: COLORS.gridLine }}
         >
           <div
-            className="grid grid-cols-12 px-6 lg:px-12 py-14 transition"
-            style={{
-              background: idx === active ? "rgba(255,77,242,0.22)" : "transparent",
-              color: "white",
-            }}
+            className="grid grid-cols-12 px-6 lg:px-12 py-12 sm:py-14 transition"
+            style={{ background: idx === active ? "rgba(255,77,242,0.22)" : "transparent", color: "white" }}
           >
-            <div className="col-span-12 md:col-span-3 text-[86px] leading-none font-semibold opacity-90">{s.no}</div>
-            <div className="col-span-12 md:col-span-9">
-              <div className="text-3xl font-semibold">{s.title}</div>
-              <p className="mt-6 max-w-[820px] text-lg leading-relaxed text-white/75">{s.desc}</p>
+            <div className="col-span-12 md:col-span-3 text-[56px] sm:text-[72px] md:text-[86px] leading-none font-semibold opacity-90">
+              {s.no}
+            </div>
+            <div className="col-span-12 md:col-span-9 mt-4 md:mt-0">
+              <div className="text-2xl sm:text-3xl font-semibold">{s.title}</div>
+              <p className="mt-6 max-w-[820px] text-base sm:text-lg leading-relaxed text-white/75">{s.desc}</p>
             </div>
           </div>
         </button>
@@ -672,18 +589,18 @@ function SevenPillars() {
 function BigQuote() {
   return (
     <SectionFrame>
-      <div className="px-6 lg:px-12 py-20">
+      <div className="px-6 lg:px-12 py-14 sm:py-20">
         <div className="text-sm font-semibold" style={{ color: COLORS.pinkSoft }}>
           Trusted methods for building innovative solutions
         </div>
 
-        <div className="mt-10 text-[46px] sm:text-[56px] lg:text-[64px] leading-[1.08] font-semibold text-white">
-          At Vention, our expertise in{" "}
+        <div className="mt-10 text-[34px] sm:text-[46px] lg:text-[64px] leading-[1.08] font-semibold text-white">
+          At Mandala Labs, our expertise in{" "}
           <span className="underline underline-offset-8 decoration-white/35">machine learning</span>{" "}
           subsets — supervised, unsupervised, and deep learning — helps us deliver solutions that are not only state-of-the-art.
         </div>
 
-        <div className="mt-16 max-w-[520px] text-lg text-white/70 lg:ml-auto">
+        <div className="mt-16 max-w-[520px] text-base sm:text-lg text-white/70 lg:ml-auto">
           When providing engineering services, we handpick the best of the AI and ML worlds for you.
         </div>
       </div>
@@ -703,11 +620,9 @@ function MethodsTable() {
 
   return (
     <SectionFrame>
-      <div className="px-6 lg:px-12 pt-16 pb-10">
-        <div className="text-6xl font-semibold text-white">Tech stack we use</div>
-        <p className="mt-6 text-lg text-white/70">
-          We craft custom AI solutions, blending the sharpest tech to sharpen your edge.
-        </p>
+      <div className="px-6 lg:px-12 pt-12 sm:pt-16 pb-10">
+        <div className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white">Tech stack we use</div>
+        <p className="mt-6 text-base sm:text-lg text-white/70">We craft custom AI solutions, blending the sharpest tech to sharpen your edge.</p>
       </div>
 
       <div className="border-t" style={{ borderColor: COLORS.gridLine }}>
@@ -715,18 +630,19 @@ function MethodsTable() {
           <div
             key={r.left}
             onMouseEnter={() => setActive(idx)}
-            className="grid grid-cols-12 px-6 lg:px-12 py-12 border-b transition hover:bg-white/[0.03]"
-            style={{
-              borderColor: COLORS.gridLine,
-              background: active === idx ? "rgba(255,255,255,0.04)" : "transparent",
-            }}
+            className="grid grid-cols-12 px-6 lg:px-12 py-10 sm:py-12 border-b transition hover:bg-white/[0.03]"
+            style={{ borderColor: COLORS.gridLine, background: active === idx ? "rgba(255,255,255,0.04)" : "transparent" }}
           >
-            <div className="col-span-12 lg:col-span-4 text-3xl font-semibold text-white">{r.left}</div>
-            <div className="col-span-12 lg:col-span-4 mt-8 lg:mt-0 text-lg text-white/80 space-y-4">
-              {r.mid.map((x) => <div key={x}>{x}</div>)}
+            <div className="col-span-12 lg:col-span-4 text-2xl sm:text-3xl font-semibold text-white">{r.left}</div>
+            <div className="col-span-12 lg:col-span-4 mt-6 lg:mt-0 text-base sm:text-lg text-white/80 space-y-4">
+              {r.mid.map((x) => (
+                <div key={x}>{x}</div>
+              ))}
             </div>
-            <div className="col-span-12 lg:col-span-4 mt-8 lg:mt-0 text-lg text-white/70 space-y-4">
-              {r.right.map((x) => <div key={x}>{x}</div>)}
+            <div className="col-span-12 lg:col-span-4 mt-6 lg:mt-0 text-base sm:text-lg text-white/70 space-y-4">
+              {r.right.map((x) => (
+                <div key={x}>{x}</div>
+              ))}
             </div>
           </div>
         ))}
